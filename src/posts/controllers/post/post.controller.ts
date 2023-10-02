@@ -11,6 +11,7 @@ import {
   Param,
   HttpException,
   HttpStatus,
+  NotFoundException,
 } from '@nestjs/common';
 import { isDate } from 'class-validator';
 import { CreatePostDto } from 'src/posts/dto/create-post.dto';
@@ -27,11 +28,12 @@ export class PostController {
   }
   @Get('/:id')
   getPostById(@Param('id') id: string) {
-    //return a single post
     const post = this.postService.findOne(id);
 
-    if (!post)
-      throw new HttpException('Post not found', HttpStatus.BAD_REQUEST);
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+
     return post;
   }
   @Post('/new')
@@ -40,11 +42,17 @@ export class PostController {
     return this.postService.createPost(postData);
   }
   @Delete('/:id')
-  deletePost() {
-    return 'deleted post';
+  deletePost(@Param('id') id: string) {
+    console.log('Deleting post with id', id);
+    return this.postService.deleteOne(id);
   }
   @Put('/:id')
-  updatePost() {
-    return 'updated post with id: ';
+  async updatePost(
+    @Param('id') id: string,
+    @Body() updatedPost: CreatePostDto,
+  ) {
+    const existingPost = await this.postService.updatePost(id, updatedPost);
+
+    return updatedPost;
   }
 }

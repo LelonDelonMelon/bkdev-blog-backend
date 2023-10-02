@@ -8,5 +8,4 @@ export class CreatePostDto {
   readonly details: string;
 
   readonly date: string;
-  readonly id: string;
 }
