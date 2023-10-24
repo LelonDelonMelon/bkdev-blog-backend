@@ -12,7 +12,9 @@ import {
   HttpException,
   HttpStatus,
   NotFoundException,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { isDate } from 'class-validator';
 import { CreatePostDto } from 'src/posts/dto/create-post.dto';
 import { PostService } from 'src/posts/services/post/post.service';
@@ -44,6 +46,7 @@ export class PostController {
   @Delete('/:id')
   deletePost(@Param('id') id: string) {
     console.log('Deleting post with id', id);
+
     return this.postService.deleteOne(id);
   }
   @Put('/:id')

@@ -1,45 +1,44 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { CreatePostType } from 'src/utils/types';
+import { Injectable } from '@nestjs/common';
+import { User } from 'src/schemas/user.schema';
 import { Model } from 'mongoose';
+import { CreateUserType } from 'src/utils/types';
 import { InjectModel } from '@nestjs/mongoose';
-import { Post } from 'src/schemas/post.schema';
 
 let allData = [];
-
 @Injectable()
-export class PostService {
+export class UsersService {
   mockData = [
     { title: 'Deneme title 1', details: 'details 1', date: 'deneme' },
   ];
-  constructor(@InjectModel(Post.name) private postModel: Model<Post>) {
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {
     allData.push(this.getPosts());
   }
   async deleteOne(id: string) {
     const toBeDeleted = this.findOne(id);
     if (!toBeDeleted) return null;
 
-    await this.postModel.deleteOne({ _id: id }).exec();
+    await this.userModel.deleteOne({ _id: id }).exec();
     return toBeDeleted;
   }
   async getPosts() {
-    return this.postModel.find().exec();
+    return this.userModel.find().exec();
   }
   async findOne(id: string) {
-    return this.postModel.findById(id);
+    return this.userModel.findById(id);
   }
-  async updatePost(id: string, updatedPost: CreatePostType) {
-    const existingPost = await this.postModel.findById(id).exec();
+  async updatePost(id: string, updatedUser: CreateUserType) {
+    const existingPost = await this.userModel.findById(id).exec();
     if (!existingPost) {
       return null;
     }
-    existingPost.set(updatedPost);
+    existingPost.set(updatedUser);
 
     await existingPost.save();
     return existingPost;
   }
-  async createPost(postDetails: CreatePostType) {
+  async createPost(userDetails: CreateUserType) {
     //if (postDetails._id) delete postDetails._id;
-    const createdPost = new this.postModel(postDetails);
+    const createdPost = new this.userModel(userDetails);
     await createdPost.save();
     return createdPost;
   }

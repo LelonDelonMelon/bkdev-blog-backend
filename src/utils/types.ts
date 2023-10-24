@@ -3,3 +3,7 @@ export type CreatePostType = {
   details: string;
   date: string;
 };
+export type CreateUserType = {
+  email: string;
+  password: string;
+};
