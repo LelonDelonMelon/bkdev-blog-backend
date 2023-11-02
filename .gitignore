@@ -5,6 +5,7 @@
 
 /src/config/keys.ts
 /src/auth/constants.ts
+.env
 
 # Logs
 logs

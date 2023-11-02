@@ -5,10 +5,11 @@ import { PostsModule } from './posts/posts.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import config from './config/keys';
+import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
-    MongooseModule.forRoot(config.mongoURI, {
+    ConfigModule.forRoot(),
+    MongooseModule.forRoot(process.env.mongoURI, {
       connectionFactory: (connection) => {
         connection.on('connected', async () => {
           console.log('Connected to the db');

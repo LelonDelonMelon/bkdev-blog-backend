@@ -7,9 +7,8 @@ import { InjectModel } from '@nestjs/mongoose';
 let allData = [];
 @Injectable()
 export class UsersService {
-  mockData = [
-    { title: 'Deneme title 1', details: 'details 1', date: 'deneme' },
-  ];
+  mockData = [{ email: 'deneme@123gmail.com', password: 'deneme123' }];
+
   constructor(@InjectModel(User.name) private userModel: Model<User>) {
     allData.push(this.getPosts());
   }
@@ -23,23 +22,23 @@ export class UsersService {
   async getPosts() {
     return this.userModel.find().exec();
   }
-  async findOne(id: string) {
-    return this.userModel.findById(id);
+  async findOne(filter: Object) {
+    return this.userModel.findOne(filter);
   }
-  async updatePost(id: string, updatedUser: CreateUserType) {
-    const existingPost = await this.userModel.findById(id).exec();
-    if (!existingPost) {
+  async updateUser(id: string, updatedUser: CreateUserType) {
+    const existingUser = await this.userModel.findById(id).exec();
+    if (!existingUser) {
       return null;
     }
-    existingPost.set(updatedUser);
+    existingUser.set(updatedUser);
 
-    await existingPost.save();
-    return existingPost;
+    await existingUser.save();
+    return existingUser;
   }
-  async createPost(userDetails: CreateUserType) {
+  async createUser(userDetails: CreateUserType) {
     //if (postDetails._id) delete postDetails._id;
-    const createdPost = new this.userModel(userDetails);
-    await createdPost.save();
-    return createdPost;
+    const createdUser = new this.userModel(userDetails);
+    await createdUser.save();
+    return createdUser;
   }
 }

@@ -1,5 +1,6 @@
 import {
   Body,
+  ConflictException,
   Controller,
   Delete,
   Get,
@@ -8,12 +9,16 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { AuthService } from 'src/auth/auth.service';
 import { UsersService } from 'src/users/services/users/users.service';
 import { CreateUserType } from 'src/utils/types';
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private authService: AuthService,
+  ) {}
 
   @Get('/')
   getUsers() {
@@ -26,9 +31,15 @@ export class UsersController {
     return user;
   }
   @Post('/new')
-  createUser(@Body() userData: CreateUserType) {
-    console.log(userData);
-    return this.usersService.createPost(userData);
+  async createUser(@Body() userData: CreateUserType) {
+    const existingUser = await this.usersService.findOne({
+      email: userData.email,
+    });
+
+    if (existingUser) {
+      throw new ConflictException('User with the same email already exists!');
+    }
+    return await this.authService.signUp(userData.email, userData.password);
   }
   @Delete('/:id')
   deleteUser(@Param('id') id: string) {
@@ -40,7 +51,7 @@ export class UsersController {
     @Param('id') id: string,
     @Body() updatedUser: CreateUserType,
   ) {
-    const existingUser = await this.usersService.updatePost(id, updatedUser);
+    const existingUser = await this.usersService.updateUser(id, updatedUser);
     return updatedUser;
   }
 }
