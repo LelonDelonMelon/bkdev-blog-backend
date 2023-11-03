@@ -6,6 +6,7 @@ import { AuthController } from './auth.controller';
 import { jwtConstants } from './constants';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth.guard';
+import { TokenRevokeServiceService } from './token-revoke-service/token-revoke-service.service';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { AuthGuard } from './auth.guard';
       signOptions: { expiresIn: '60s' },
     }),
   ],
-  providers: [AuthService],
+  providers: [AuthService, TokenRevokeServiceService],
   controllers: [AuthController],
   exports: [AuthService],
 })

@@ -30,4 +30,11 @@ export class AuthController {
   getProfile(@Request() req) {
     return req.user;
   }
+
+  @Post('signout')
+  signout(@Body() token: string, @Request() req) {
+    this.authService.signOut(token);
+
+    return { message: 'Sign-out successful' };
+  }
 }

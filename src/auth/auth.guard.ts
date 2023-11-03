@@ -7,16 +7,23 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { Request } from 'express';
+import { TokenRevokeServiceService } from './token-revoke-service/token-revoke-service.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private revokedTokenService: TokenRevokeServiceService,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
       throw new UnauthorizedException();
+    }
+    if (await this.revokedTokenService.isTokenRevoked(token)) {
+      throw new UnauthorizedException('Token revoked');
     }
     try {
       const payload = await this.jwtService.verifyAsync(token, {
