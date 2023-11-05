@@ -15,7 +15,7 @@ import { TokenRevokeServiceService } from './token-revoke-service/token-revoke-s
       global: true,
       secret: jwtConstants.secret,
 
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '180s' },
     }),
   ],
   providers: [AuthService, TokenRevokeServiceService],
