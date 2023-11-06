@@ -11,12 +11,12 @@ export class AuthService {
     private tokenRevokeService: TokenRevokeServiceService,
   ) {}
 
-  async signIn(username: string, pass: string, id: string): Promise<any> {
-    const user = await this.usersService.findOne(id);
+  async signIn(username: string, pass: string): Promise<any> {
+    const user = await this.usersService.findOne({ email: username });
 
     const match = await bcrypt.compare(pass, user.password);
     console.log(pass, user.password);
-    console.log('From service', username, pass, id, user, match);
+    console.log('From service', username, pass, user.password, match);
 
     if (!match) {
       throw new UnauthorizedException();

@@ -24,9 +24,9 @@ export class UsersService {
   async getPosts() {
     return this.userModel.find().exec();
   }
-  async findOne(id) {
+  async findOne(data) {
     try {
-      const found = await this.userModel.findById(id);
+      const found = await this.userModel.findOne(data);
       console.log(found);
       return found;
     } catch (err) {

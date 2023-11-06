@@ -20,9 +20,10 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: SignInDto, @Query('id') id: string) {
-    console.log('From controller: ', signInDto, id);
-    return this.authService.signIn(signInDto.email, signInDto.password, id);
+  signIn(@Body() signInDto: SignInDto) {
+    console.log('From controller: ', signInDto);
+
+    return this.authService.signIn(signInDto.email, signInDto.password);
   }
 
   @UseGuards(AuthGuard)
