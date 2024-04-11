@@ -22,9 +22,11 @@ export class PostService {
     return toBeDeleted;
   }
   async getPosts() {
+    console.log('LOG', (await this.postModel.find().exec()).length);
     return this.postModel.find().exec();
   }
   async findOne(id: string) {
+    console.log('LOG', await this.postModel.findById(id));
     return this.postModel.findById(id);
   }
   async updatePost(id: string, updatedPost: CreatePostType) {
