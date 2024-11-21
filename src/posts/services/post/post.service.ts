@@ -22,7 +22,7 @@ export class PostService {
     return toBeDeleted;
   }
   async getPosts() {
-    console.log('LOG', (await this.postModel.find().exec()).length);
+    console.log('INFO: GET POSTS CALL', (await this.postModel.find().exec()).length);
     return this.postModel.find().exec();
   }
   async findOne(id: string) {

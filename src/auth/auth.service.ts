@@ -5,12 +5,19 @@ import { TokenRevokeServiceService } from './token-revoke-service/token-revoke-s
 import * as bcrypt from 'bcrypt';
 @Injectable()
 export class AuthService {
+
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
     private tokenRevokeService: TokenRevokeServiceService,
-  ) {}
+  ) { }
 
+  async verifyToken(token: any) {
+    console.log(token);
+    if (!token)
+      throw new Error('Invalid token');
+    return this.jwtService.verify(token);
+  }
   async signIn(username: string, pass: string): Promise<any> {
     const user = await this.usersService.findOne({ email: username });
 
