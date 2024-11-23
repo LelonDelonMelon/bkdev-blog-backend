@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { CreateUserType } from 'src/utils/types';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
+import { Types } from 'mongoose';
 
 let allData = [];
 @Injectable()
@@ -44,18 +45,16 @@ export class UsersService {
     return existingUser;
   }
   async createUser(userDetails: CreateUserType) {
-    //if (postDetails._id) delete postDetails._id;
-
-    console.log('Users pass before encryption: ', userDetails.password);
-
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(userDetails.password, salt);
-    userDetails.password = hashedPassword;
 
-    const createdUser = new this.userModel(userDetails);
-    console.log('Users pass after encryption: ', createdUser.password);
+    const createdUser = new this.userModel({
+      ...userDetails,
+      password: hashedPassword,
+      _id: new Types.ObjectId(),
+    });
 
-    await createdUser.save();
-    return createdUser;
+    console.log('Created user:', createdUser);
+    return await createdUser.save();
   }
 }

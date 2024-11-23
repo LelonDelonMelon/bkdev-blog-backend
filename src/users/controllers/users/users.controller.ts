@@ -46,6 +46,7 @@ export class UsersController {
       const decoded = await this.authService.verifyToken(token);
       const userId = decoded.userId;
       const user = await this.usersService.findOne(userId);
+      console.log('INFO USER', user);
       return user.email;
     } catch (err) {
       throw new UnauthorizedException('Invalid token');

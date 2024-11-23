@@ -13,7 +13,7 @@ export class AuthService {
   ) { }
 
   async verifyToken(token: any) {
-    console.log(token);
+    console.log("INFO: TOKEN", token);
     if (!token)
       throw new Error('Invalid token');
     return this.jwtService.verify(token);
@@ -22,7 +22,7 @@ export class AuthService {
     const user = await this.usersService.findOne({ email: username });
 
     const match = await bcrypt.compare(pass, user.password);
-    console.log(pass, user.password);
+    console.log(" From controller", pass, user.password);
     console.log('From service', username, pass, user.password, match);
 
     if (!match) {
@@ -32,7 +32,7 @@ export class AuthService {
     const { password, ...result } = user;
     const payload = { sub: user._id, username: user.email };
     const access_token = await this.jwtService.signAsync(payload);
-    console.log(access_token);
+    console.log("INFO : ACCESS TOKEN", access_token);
     return access_token;
   }
   async signUp(username: string, pass: string): Promise<any> {
