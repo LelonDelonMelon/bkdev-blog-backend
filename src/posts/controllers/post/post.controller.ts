@@ -18,11 +18,11 @@ import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { isDate } from 'class-validator';
 import { CreatePostDto } from 'src/posts/dto/create-post.dto';
 import { PostService } from 'src/posts/services/post/post.service';
-
+import Log from 'src/log';
 @Controller('post')
 export class PostController {
   //Inject the service to the controller
-  constructor(private postService: PostService) {}
+  constructor(private postService: PostService) { }
 
   @Get('/')
   getPosts() {
@@ -40,12 +40,12 @@ export class PostController {
   }
   @Post('/new')
   createPost(@Body() postData: CreatePostDto) {
-    console.log(postData);
+    Log.info('Creating new post', postData);
     return this.postService.createPost(postData);
   }
   @Delete('/:id')
   deletePost(@Param('id') id: string) {
-    console.log('Deleting post with id', id);
+    Log.info('Deleting post with id', id);
 
     return this.postService.deleteOne(id);
   }

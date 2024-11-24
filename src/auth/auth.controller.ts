@@ -13,16 +13,15 @@ import {
 import { AuthService } from './auth.service';
 import { SignInDto } from 'src/posts/dto/signInDto';
 import { AuthGuard } from './auth.guard';
-
+import Log from 'src/log';
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
   signIn(@Body() signInDto: SignInDto) {
-    console.log('From controller: ', signInDto);
-
+    Log.info('From controller: ', signInDto);
     return this.authService.signIn(signInDto.email, signInDto.password);
   }
 

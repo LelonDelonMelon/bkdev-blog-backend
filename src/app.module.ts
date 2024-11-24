@@ -6,20 +6,21 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-
+import Log from './log';
 @Module({
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.mongoURI, {
       connectionFactory: (connection) => {
         connection.on('connected', async () => {
-          console.log('Connected to the db');
+          Log.info('Connected to MongoDB');
+          Log.info('Creating "counters" collection if it does not exist');
 
           const db = connection.db;
           const collections = await db.listCollections().toArray();
           if (!collections.some((coll) => coll.name === 'counters')) {
             await db.createCollection('counters');
-            console.log('Created "counters" collection');
+            Log.info('Created "counters" collection');
           }
         });
 

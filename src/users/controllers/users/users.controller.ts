@@ -15,7 +15,7 @@ import { Req } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { UsersService } from 'src/users/services/users/users.service';
 import { CreateUserType } from 'src/utils/types';
-
+import Log from 'src/log';
 @Controller('users')
 export class UsersController {
   constructor(
@@ -35,9 +35,9 @@ export class UsersController {
   }
   @Get('/me')
   async getUserDetails(@Req() req: Request) {
-    const token = req.headers['authorization'].split(' ')[1];
+    const token = req.headers['authorization']?.split(' ')[1];
 
-    console.log("INFO: TOKEN LOG", token);
+    Log.info('Token @me', token);
     if (!token) {
       throw new UnauthorizedException('No token provided');
     }
@@ -46,8 +46,8 @@ export class UsersController {
       const decoded = await this.authService.verifyToken(token);
       const userId = decoded.userId;
       const user = await this.usersService.findOne(userId);
-      console.log('INFO USER', user);
-      return user.email;
+      Log.info('User @me', user);
+      return user;
     } catch (err) {
       throw new UnauthorizedException('Invalid token');
     }
@@ -65,7 +65,7 @@ export class UsersController {
   }
   @Delete('/:id')
   deleteUser(@Param('id') id: string) {
-    console.log('Deleting user with id:', id);
+    Log.info('Deleting user with id:', id);
     return this.usersService.deleteOne(id);
   }
   @Put('/:id')

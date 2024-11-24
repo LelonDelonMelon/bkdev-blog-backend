@@ -3,7 +3,7 @@ import { CreatePostType } from 'src/utils/types';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post } from 'src/schemas/post.schema';
-
+import Log from 'src/log';
 let allData = [];
 
 @Injectable()
@@ -22,12 +22,15 @@ export class PostService {
     return toBeDeleted;
   }
   async getPosts() {
-    console.log('INFO: GET POSTS CALL', (await this.postModel.find().exec()).length);
+    Log.info('GET POSTS CALL', (await this.postModel.find().exec()).length);
     return this.postModel.find().exec();
   }
   async findOne(id: string) {
-    console.log('LOG', await this.postModel.findById(id));
-    return this.postModel.findById(id);
+    Log.info('Finding post', id);
+    const found = await this.postModel.findById(id).exec();
+    if (!found) return null;
+    Log.info('Found post', found);
+    return found;
   }
   async updatePost(id: string, updatedPost: CreatePostType) {
     const existingPost = await this.postModel.findById(id).exec();

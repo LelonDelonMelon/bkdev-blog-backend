@@ -1,0 +1,122 @@
+{
+  "auth": {
+    "base": "/auth",
+    "endpoints": {
+      "login": {
+        "method": "POST",
+        "path": "/login",
+        "description": "Authenticate user and get access token",
+        "body": {
+          "email": "string",
+          "password": "string"
+        }
+      },
+      "profile": {
+        "method": "GET",
+        "path": "/profile",
+        "description": "Get authenticated user profile",
+        "auth": "required"
+      },
+      "signout": {
+        "method": "POST",
+        "path": "/signout",
+        "description": "Sign out user and revoke token",
+        "body": {
+          "token": "string"
+        }
+      }
+    }
+  },
+  "users": {
+    "base": "/users",
+    "endpoints": {
+      "getAllUsers": {
+        "method": "GET",
+        "path": "/",
+        "description": "Get all users"
+      },
+      "getUserById": {
+        "method": "GET",
+        "path": "/:id([0-9]+)",
+        "description": "Get user by ID",
+        "params": {
+          "id": "string (numeric)"
+        }
+      },
+      "getCurrentUser": {
+        "method": "GET",
+        "path": "/me",
+        "description": "Get current authenticated user details",
+        "auth": "required",
+        "headers": {
+          "Authorization": "Bearer token"
+        }
+      },
+      "createUser": {
+        "method": "POST",
+        "path": "/new",
+        "description": "Create a new user",
+        "body": {
+          "email": "string",
+          "password": "string"
+        }
+      },
+      "deleteUser": {
+        "method": "DELETE",
+        "path": "/:id",
+        "description": "Delete user by ID",
+        "params": {
+          "id": "string"
+        }
+      },
+      "updateUser": {
+        "method": "PUT",
+        "path": "/:id",
+        "description": "Update user by ID",
+        "params": {
+          "id": "string"
+        },
+        "body": {
+          "email": "string",
+          "password": "string"
+        }
+      }
+    }
+  },
+  "posts": {
+    "base": "/post",
+    "endpoints": {
+      "getAllPosts": {
+        "method": "GET",
+        "path": "/",
+        "description": "Get all posts"
+      },
+      "getPostById": {
+        "method": "GET",
+        "path": "/:id",
+        "description": "Get post by ID",
+        "params": {
+          "id": "string"
+        }
+      },
+      "createPost": {
+        "method": "POST",
+        "path": "/new",
+        "description": "Create a new post",
+        "body": {
+          "title": "string",
+          "content": "string",
+          "author": "string"
+        }
+      },
+      "deletePost": {
+        "method": "DELETE",
+        "path": "/:id",
+        "description": "Delete post by ID",
+        "params": {
+          "id": "string"
+        }
+      }
+    }
+  }
+}
