@@ -15,11 +15,11 @@ import { TokenRevokeServiceService } from './token-revoke-service/token-revoke-s
       global: true,
       secret: jwtConstants.secret,
 
-      signOptions: { expiresIn: '180s' },
+      signOptions: { expiresIn: '24h' },
     }),
   ],
   providers: [AuthService, TokenRevokeServiceService],
   controllers: [AuthController],
   exports: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule { }

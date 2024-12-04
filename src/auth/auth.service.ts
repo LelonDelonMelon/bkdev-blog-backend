@@ -63,6 +63,31 @@ export class AuthService {
     };
   }
 
+  async refreshToken(token: string) {
+    try {
+      // Verify the existing token
+      const decoded = await this.jwtService.verify(token);
+      
+      // Generate a new token with the same payload
+      const payload = { sub: decoded.sub, username: decoded.username };
+      const access_token = await this.jwtService.signAsync(payload);
+      
+      // Get user data
+      const user = await this.usersService.findOne({ id: decoded.sub });
+      
+      return {
+        access_token,
+        user
+      };
+    } catch (err) {
+      Log.error('Token refresh error:', err);
+      if (err.name === 'TokenExpiredError') {
+        throw new UnauthorizedException('Refresh token expired, please login again');
+      }
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+  }
+
   async signOut(jwt: string): Promise<void> {
     this.tokenRevokeService.revokeToken(jwt);
   }

@@ -30,7 +30,7 @@ export class UsersService {
 
   async findOne(data) {
     try {
-      const found = await this.userModel.findOne(data).select('-password').lean().exec();
+      const found = await this.userModel.findOne(data).select('_id').lean().exec();
       if (found) {
         const objectId = new Types.ObjectId(found.id);
         const user = {
@@ -41,7 +41,7 @@ export class UsersService {
         Log.info('Found user', user);
         return user;
       }
-      return null;
+      return Log.error('User not found');
     } catch (err) {
       Log.error('Error: ', err);
       return null;
