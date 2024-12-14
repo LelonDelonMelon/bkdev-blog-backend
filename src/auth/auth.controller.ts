@@ -35,6 +35,7 @@ export class AuthController {
 
   @Post('signout')
   signout(@Body() token: string, @Request() req) {
+    Log.info('ACTION: SIGN OUT FROM controller: ', token);
     this.authService.signOut(token);
 
     return { message: 'Sign-out successful' };

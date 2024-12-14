@@ -50,21 +50,24 @@ export class UsersService {
 
   async findOneWithPassword(data) {
     try {
-      const found = await this.userModel.findOne(data).lean().exec();
+      const found = await this.userModel.findOne(data).select('_id email password').lean().exec();
       if (found) {
         const objectId = new Types.ObjectId(found.id);
-        return {
-          ...found,
+        const user = {
           id: objectId.toString(),
+          email: found.email,
+          password: found.password,
           createdAt: objectId.getTimestamp()
         };
+        Log.info('Found user', user);
+        return user;
       }
-      return null;
     } catch (err) {
       Log.error('Error: ', err);
       return null;
     }
   }
+
 
   async updateUser(id: string, updatedUser: CreateUserType) {
     const existingUser = await this.userModel.findById(id).exec();

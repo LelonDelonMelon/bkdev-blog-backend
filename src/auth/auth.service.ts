@@ -25,7 +25,7 @@ export class AuthService {
 
   async signIn(username: string, pass: string): Promise<any> {
     const user = await this.usersService.findOneWithPassword({ email: username });
-    
+
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
@@ -56,7 +56,7 @@ export class AuthService {
     const payload = { sub: user.id, username: user.email };
     const access_token = await this.jwtService.signAsync(payload);
     Log.info(access_token, ' of the user with id ', user.id);
-    
+
     return {
       access_token,
       user: result
@@ -67,14 +67,14 @@ export class AuthService {
     try {
       // Verify the existing token
       const decoded = await this.jwtService.verify(token);
-      
+
       // Generate a new token with the same payload
       const payload = { sub: decoded.sub, username: decoded.username };
       const access_token = await this.jwtService.signAsync(payload);
-      
+
       // Get user data
       const user = await this.usersService.findOne({ id: decoded.sub });
-      
+
       return {
         access_token,
         user
@@ -89,6 +89,7 @@ export class AuthService {
   }
 
   async signOut(jwt: string): Promise<void> {
+    Log.info('Auth service : Revoking token: ', jwt);
     this.tokenRevokeService.revokeToken(jwt);
   }
 }
